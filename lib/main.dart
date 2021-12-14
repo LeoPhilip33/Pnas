@@ -119,13 +119,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Image.asset('assets/images/onOff.png'),
-                          TextButton(
-                            onPressed: () {
-                              _lunchServer();
+                          GestureDetector(
+                            onTap: () {
+                              lunchServer();
                             },
+                            child: Image.asset('assets/images/onOff.png'),
+                          ),
+                          TextButton(
+                            onPressed: () {},
                             child: const Text(
-                              'ON/OFF Server',
+                              'Refresh status',
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Color(0xFF74D9FF),
@@ -156,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-void _lunchServer() async {
+void lunchServer() async {
   var response = await http.post(url);
   if (response.statusCode == 200) {
     print('BOOT bien envoyé');
