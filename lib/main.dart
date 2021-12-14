@@ -18,10 +18,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pnas Status',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Pnas Status'),
+      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF1E1E1E)),
+      home: const MyHomePage(title: ''),
     );
   }
 }
@@ -40,6 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     Future<void> pingServer() async {
+      print("ping send");
       var response = await http.post(urlPingServer);
       if (response.statusCode == 200) {
         var bodyPingServer = response.body;
@@ -58,29 +57,97 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    Timer.periodic(const Duration(seconds: 2), (timer) {
-      pingServer();
-    });
+    // Timer.periodic(const Duration(seconds: 2), (timer) {
+    //   pingServer();
+    // });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
+      body: Container(
+        margin: const EdgeInsets.only(top: 40.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(
-              'Serveur Status : $serverStatus',
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            const Center(
+              child: Text(
+                'PNAS Status',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
+                    color: Color(0xFF74D9FF)),
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                _lunchServer();
-              },
-              child: const Text('Démarer le serveur'),
+            Column(
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    'Serveur Status : $serverStatus',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color(0xFF74D9FF)),
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              pingServer();
+                            },
+                            child: Image.asset('assets/images/ping.png'),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              'Refresh status',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Color(0xFF74D9FF),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Image.asset('assets/images/onOff.png'),
+                          TextButton(
+                            onPressed: () {
+                              _lunchServer();
+                            },
+                            child: const Text(
+                              'ON/OFF Server',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Color(0xFF74D9FF),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 20.0),
+              child: const Text(
+                'Made by Léo Corporation',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    color: Color(0xFF74D9FF)),
+              ),
             ),
           ],
         ),
