@@ -41,9 +41,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     Future<void> pingServer() async {
-      setState(() {
-        logStatus = "Details : Status check";
-      });
       var response = await http.post(urlPingServer);
       if (response.statusCode == 200) {
         var bodyPingServer = response.body;
@@ -52,14 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
             serverStatus = "ON";
             serverOnOff = "Stop";
             serverImgStatus = "assets/images/serverStop.png";
-            logStatus = "Details :  turned on";
           });
         } else {
           setState(() {
             serverStatus = "OFF";
             serverOnOff = "Start";
             serverImgStatus = "assets/images/serverStart.png";
-            logStatus = "Details : turned off";
           });
         }
       } else {
@@ -69,16 +64,28 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
+    pingServer();
+
     void lunchServer() async {
       setState(() {
-        logStatus = "Details : Information send to the server";
+        logStatus = "Details : Establishing contact with the server";
       });
 
       var response = await http.post(url);
       if (response.statusCode == 200) {
-        setState(() {
-          logStatus = "Details : server loading";
-        });
+        if (serverStatus == "ON") {
+          setState(
+            () {
+              logStatus = "Details : Server shutdown";
+            },
+          );
+        } else {
+          setState(
+            () {
+              logStatus = "Details : Starting the server";
+            },
+          );
+        }
       } else {
         setState(() {
           logStatus = "Details : ERROR ! Try again in a moment";
@@ -130,31 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Row(
                   children: <Widget>[
                     Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              pingServer();
-                            },
-                            child: Image.asset("assets/images/ping.png"),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Refresh status',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Color(0xFF74D9FF),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 6,
+                      flex: 1,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -164,8 +147,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                             child: Image.asset(serverImgStatus),
                           ),
-                          TextButton(
-                            onPressed: () {},
+                          Container(
+                            margin: const EdgeInsets.only(top: 15.0),
                             child: Text(
                               '$serverOnOff Server',
                               style: const TextStyle(
