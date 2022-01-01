@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'package:window_size/window_size.dart';
 
 var url = Uri.parse('http://82.64.38.173/on-off.php');
 var urlPingServer = Uri.parse('http://82.64.38.173/ping.php');
 
 void main() {
+    WidgetsFlutterBinding.ensureInitialized();
+    setWindowMaxSize(const Size(400, 550));
+    setWindowMinSize(const Size(400, 550));
   runApp(const MyApp());
 }
 
